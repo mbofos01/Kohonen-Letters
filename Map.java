@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Map {
 	public Node[][] matrix;
 	public double[] inputs;
@@ -40,17 +42,20 @@ public class Map {
 		System.out.println("T: " + T + " J: " + J + " Rate: " + n + " Radius: " + sigma);
 	}
 
+	public void updateWeights(Node winner) {
+		for (Node[] s : matrix)
+			for (Node node : s) {
+				double h = neighborhoodFunction(winner, node);
+				for (int i = 0; i < inputs.length; i++)
+					node.weights[i] = node.weights[i] + this.n * h * (inputs[i] - node.weights[i]);
+			}
+
+	}
+
 	public void printAll() {
 		for (Node[] s : matrix)
 			for (Node n : s)
 				n.printNode();
-	}
-
-	public static void main(String[] args) {
-		Map m = new Map(40, 2, 300, 0.5);
-		m.printDetails();
-		m.printAll();
-
 	}
 
 }

@@ -1,6 +1,8 @@
+import java.util.Objects;
+
 public class Node {
 	private int x, y;
-	private double[] weights;
+	public double[] weights;
 
 	public Node(int x, int y, int numberOfInputs) {
 		this.x = x;
@@ -44,5 +46,16 @@ public class Node {
 		System.out.println("\n============================================================");
 	}
 
-	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Node other = (Node) obj;
+		return x == other.x && y == other.y;
+	}
+
 }
