@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 public class Map {
 	public Node[][] matrix;
@@ -56,6 +55,30 @@ public class Map {
 		for (Node[] s : matrix)
 			for (Node n : s)
 				n.printNode();
+	}
+
+	public void enterNewInput(double new_input[]) {
+		for (int i = 0; i < inputs.length; i++)
+			inputs[i] = new_input[i];
+	}
+
+	public Node findWinner() {
+		double distance = Integer.MAX_VALUE;
+		int min_placeX = -1, min_placeY = -1;
+		for (int i = 0; i < matrix.length; i++)
+			for (int j = 0; j < matrix[i].length; j++) {
+				double temp = 0;
+				for (int a = 0; a < inputs.length; a++) {
+					temp += Math.pow(inputs[a] - matrix[i][j].weights[a], 2);
+				}
+
+				if (temp <= distance) {
+					min_placeX = i;
+					min_placeY = j;
+					distance = temp;
+				}
+			}
+		return matrix[min_placeX][min_placeY];
 	}
 
 }
