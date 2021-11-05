@@ -2,13 +2,13 @@ import java.util.ArrayList;
 
 public class Kohonen {
 	public static void main(String[] args) {
-		int DIMENSION = 200;
-		int ITERATIONS = 100;
-		int INPUTS = 4;
+		int DIMENSION = 800;
+		int ITERATIONS = 5;
+		int INPUTS = 16;
 		double RATE = 0.5;
-		String train_file = "flowers.txt";
-		String test_file = "flowers.txt";
-		// Tools.createTrainAndTestSets("flowers.txt");
+		String train_file = "normalized.txt";
+		String test_file = "normalized.txt";
+		// Tools.createTrainAndTestSets("normalized.txt");
 		/*******************************************************/
 		ArrayList<double[]> train_inputs = new ArrayList<>();
 		ArrayList<Character> train_outputs = new ArrayList<>();
@@ -31,7 +31,10 @@ public class Kohonen {
 		// m.printAll();
 		ArrayList<String> dataResult = new ArrayList<>();
 		for (int epochs = 0; epochs < ITERATIONS; epochs++) {
+
 			System.out.println("Epoch: " + epochs);
+			double time = System.currentTimeMillis() * 1000;
+			System.out.println(time);
 			/*******************************************************/
 
 			for (int inLine = 0; inLine < TRAIN_LINES; inLine++) {

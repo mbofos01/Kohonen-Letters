@@ -30,11 +30,15 @@ public class Map {
 	}
 
 	public void updateRate(int currentIteration) {
+		double t = n;
 		n = n0 * Math.exp(-currentIteration / T);
+		n0 = t;
 	}
 
 	public void updateSigma(int currentIteration) {
+		double t = sigma;
 		sigma = sigma0 * Math.exp(-currentIteration / J);
+		sigma0 = t;
 	}
 
 	public void printDetails() {
