@@ -2,12 +2,12 @@ import java.util.ArrayList;
 
 public class Kohonen {
 	public static void main(String[] args) {
-		int DIMENSION = 100;
+		int DIMENSION = 200;
 		int ITERATIONS = 100;
 		int INPUTS = 16;
 		double RATE = 0.5;
 		String train_file = "train.txt";
-		String test_file = "test.txt";
+		String test_file =  "test.txt";
 		Tools.createTrainAndTestSets("normalized.txt");
 		/*******************************************************/
 		ArrayList<double[]> train_inputs = new ArrayList<>();
