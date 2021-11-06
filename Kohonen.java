@@ -1,14 +1,19 @@
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.tools.Tool;
 
 public class Kohonen {
 	public static void main(String[] args) {
-		int DIMENSION = 200;
+		int DIMENSION = 100;
 		int ITERATIONS = 100;
-		int INPUTS = 16;
-		double RATE = 0.5;
+		int INPUTS = 4;
+		double RATE = 0.3;
+		String file_dump = "data.txt";
 		String train_file = "train.txt";
-		String test_file =  "test.txt";
-		Tools.createTrainAndTestSets("normalized.txt");
+		String test_file = "test.txt";
+		Tools.createTrainAndTestSets("flowers.txt");
 		/*******************************************************/
 		ArrayList<double[]> train_inputs = new ArrayList<>();
 		ArrayList<Character> train_outputs = new ArrayList<>();
@@ -27,8 +32,6 @@ public class Kohonen {
 		Tools.fillData(test_file, test_inputs, test_outputs, INPUTS);
 		/*******************************************************/
 		Map m = new Map(DIMENSION, INPUTS, ITERATIONS, RATE);
-		// m.printDetails();
-		// m.printAll();
 		ArrayList<String> dataResult = new ArrayList<>();
 		for (int epochs = 0; epochs < ITERATIONS; epochs++) {
 
@@ -45,23 +48,29 @@ public class Kohonen {
 			m.updateSigma(epochs);
 			m.updateRate(epochs);
 
-			/*******************************************************/
-			/*******************************************************/
-			/*
-			 * for (int inLine = 0; inLine < TEST_LINES; inLine++) {
-			 * m.enterNewInput(test_inputs.get(inLine)); Node winner = m.findWinner(); }
-			 */
-			/*******************************************************/
-
+		}
+		String[] files = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
+				"S", "T", "U", "V", "W", "X", "Y", "Z" };
+		for (int i = 0; i < 26; i++) {
+			File myObj = new File(files[i]);
+			try {
+				myObj.delete();
+				myObj.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		for (int inLine = 0; inLine < TEST_LINES; inLine++) {
 			m.enterNewInput(test_inputs.get(inLine));
 			Node winner = m.findWinner();
 			dataResult.add(new String(test_outputs.get(inLine) + " " + winner.getX() + " " + winner.getY()));
+			Tools.appendToFile(new String(test_outputs.get(inLine) + " "),
+					new String(winner.getX() + " " + winner.getY()));
 		}
 
-		Tools.writeFile("data.txt", dataResult);
-		Tools.runPython("map.py", "data.txt");
+		Tools.writeFile(file_dump, dataResult);
+		Tools.runPython("map.py", file_dump);
 
 	}
 }

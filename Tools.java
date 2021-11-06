@@ -1,9 +1,11 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -220,6 +222,30 @@ public class Tools {
 		}
 		writeFile("train.txt", train);
 		writeFile("test.txt", test);
+	}
+
+	public static void appendToFile(String filename, String line) {
+
+		FileWriter fos = null;
+		try {
+			fos = new FileWriter(filename, true);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			fos.write(new String(line + "\n"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			fos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	public static double Euclidean(Node winner, Node random_node) {
