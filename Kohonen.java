@@ -7,13 +7,13 @@ import javax.tools.Tool;
 public class Kohonen {
 	public static void main(String[] args) {
 		int DIMENSION = 100;
-		int ITERATIONS = 100;
-		int INPUTS = 4;
+		int ITERATIONS = 5;
+		int INPUTS = 16;
 		double RATE = 0.3;
 		String file_dump = "data.txt";
 		String train_file = "train.txt";
 		String test_file = "test.txt";
-		Tools.createTrainAndTestSets("flowers.txt");
+		Tools.createTrainAndTestSets("normalized.txt");
 		/*******************************************************/
 		ArrayList<double[]> train_inputs = new ArrayList<>();
 		ArrayList<Character> train_outputs = new ArrayList<>();
@@ -65,7 +65,7 @@ public class Kohonen {
 			m.enterNewInput(test_inputs.get(inLine));
 			Node winner = m.findWinner();
 			dataResult.add(new String(test_outputs.get(inLine) + " " + winner.getX() + " " + winner.getY()));
-			Tools.appendToFile(new String(test_outputs.get(inLine) + " "),
+			Tools.appendToFile(new String(test_outputs.get(inLine) + ""),
 					new String(winner.getX() + " " + winner.getY()));
 		}
 

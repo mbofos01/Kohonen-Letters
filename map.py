@@ -46,6 +46,6 @@ plt.grid(True)
 plt.xlim([- 0.2*x_max, x_max])
 plt.ylim([- 0.2*y_max, y_max])
 plt.savefig('Cluster.png')
-plt.legend(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
- "R", "S", "T", "U", "V", "W", "X", "Y", "Z"], loc='best')
+#plt.legend(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
+# "R", "S", "T", "U", "V", "W", "X", "Y", "Z"], loc='best')
 plt.show()
