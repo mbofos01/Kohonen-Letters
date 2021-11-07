@@ -30,6 +30,38 @@ public class Tools {
 	}
 
 	/**
+	 * This function reads a parameter file and fills an arraylist with the data.
+	 * 
+	 * @param filename parameters file
+	 * @return ArrayList(String) containing the file data
+	 */
+	public static ArrayList<String> getParameters(String filename) {
+		ArrayList<String> list = new ArrayList<>();
+		try {
+			File myObj = new File(filename);
+			Scanner myReader = new Scanner(myObj);
+			int cnt = 0;
+			while (list.size() < findLines(filename) && myReader.hasNextLine()) {
+				cnt++;
+				String data = myReader.next();
+				if (cnt == 2) {
+					list.add(data);
+					cnt = 0;
+				}
+
+				// System.out.println(data);
+
+			}
+			myReader.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	/**
 	 * This function counts the lines of a file.
 	 * 
 	 * @param filename file we count the lines
@@ -253,4 +285,38 @@ public class Tools {
 		double y_d = winner.getY() - random_node.getY();
 		return Math.pow(x_d, 2) + Math.pow(y_d, 2);
 	}
+
+	/**
+	 * This function calculates the error of an output.
+	 * 
+	 * (0.5*Ó(target - real)^2)
+	 * 
+	 * @param tpj ArrayList(Double) target outputs
+	 * @param opj ArrayList(Double) real outputs
+	 * @return double value - error
+	 */
+	public static double error(double[] tpj, double[] opj) {
+		double sum = 0;
+		for (int i = 0; i < tpj.length; i++)
+			sum += (tpj[i] - opj[i]) * (tpj[i] - opj[i]);
+
+		return 0.5 * sum;
+
+	}
+
+	/**
+	 * This function creates an array than represents the output we expect from a
+	 * neural network in order to categorize letters.
+	 * 
+	 * @param letter The character we want to recognize
+	 * @return Double array (binary logic)
+	 */
+	public static double[] createExpectedOutputArray(char letter) {
+		double[] dump = new double[26];
+		for (int i = 0; i < 26; i++)
+			dump[i] = 0;
+		dump[(int) (letter - 'A')] = 1;
+		return dump;
+	}
+
 }

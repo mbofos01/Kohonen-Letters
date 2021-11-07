@@ -1,0 +1,8 @@
+dimension 100
+iterations 100
+learningRate 0.3
+numberOfInputs 16
+source_file normalized.txt
+destinationFile cluster.txt
+trainFile train.txt
+testFile test.txt

@@ -45,12 +45,16 @@ public class Map {
 		System.out.println("T: " + T + " J: " + J + " Rate: " + n + " Radius: " + sigma);
 	}
 
-	public void updateWeights(Node winner) {
+	public void updateWeights(Node winner, char letter) {
 		for (Node[] s : matrix)
 			for (Node node : s) {
 				double h = neighborhoodFunction(winner, node);
+				// System.out.println(h);
 				for (int i = 0; i < inputs.length; i++)
 					node.weights[i] = node.weights[i] + this.n * h * (inputs[i] - node.weights[i]);
+
+				// node.counters[letter - 'A'] += this.n * h;
+
 			}
 
 	}
