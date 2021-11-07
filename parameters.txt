@@ -1,5 +1,5 @@
 dimension 100
-iterations 100
+iterations 40
 learningRate 0.3
 numberOfInputs 16
 source_file normalized.txt

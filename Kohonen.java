@@ -11,7 +11,7 @@ import main.FunctionalityExampleMain;
 public class Kohonen {
 
 	public static boolean GNUPLOT = false;
-	public static boolean JAVA = false;
+	public static boolean JAVA = true;
 	public static boolean PYPLOT = true;
 	static int DIMENSION;
 	static int ITERATIONS;
