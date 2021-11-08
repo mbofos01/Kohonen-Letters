@@ -1,9 +1,6 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
-
-import javax.tools.Tool;
 
 import graph.SimpleGraph;
 import main.FunctionalityExampleMain;
@@ -36,12 +33,28 @@ public class Kohonen {
 		dst_file = new String(list.get(5));
 		train_file = new String(list.get(6));
 		test_file = new String(list.get(7));
+		GNUPLOT = Boolean.parseBoolean(list.get(8));
+		JAVA = Boolean.parseBoolean(list.get(9));
+		PYPLOT = Boolean.parseBoolean(list.get(10));
 
 	}
 
 	public static void printArguments() {
-		System.out.println(DIMENSION + "x" + DIMENSION + " Kohonen Map");
+		System.out.println("Kohonen Map: " + DIMENSION + "x" + DIMENSION);
 		System.out.println("Iterations: " + ITERATIONS);
+		System.out.println("Plot using: ");
+		if (JAVA)
+			System.out.print("Java Plot ");
+		if (JAVA && GNUPLOT)
+			System.out.print(" , ");
+		if (GNUPLOT)
+			System.out.print("GNU Plot");
+		if ((JAVA || GNUPLOT) && PYPLOT)
+			System.out.print(" , ");
+		if (PYPLOT)
+			System.out.print("Matplot Lib");
+
+		System.out.println();
 
 	}
 
@@ -71,6 +84,9 @@ public class Kohonen {
 		/*******************************************************/
 		ArrayList<double[]> test_inputs = new ArrayList<>();
 		ArrayList<Character> test_outputs = new ArrayList<>();
+		/*******************************************************/
+		ArrayList<Double> train_error_list = new ArrayList<>();
+		ArrayList<Double> test_error_list = new ArrayList<>();
 		/*******************************************************/
 		int TRAIN_LINES = Tools.findLines(train_file);
 		for (int i = 0; i < TRAIN_LINES; i++)
@@ -110,12 +126,16 @@ public class Kohonen {
 				test_error += winner.errorCalcu(test_outputs.get(inLine));
 
 			}
+			train_error_list.add(train_error / TRAIN_LINES);
+			test_error_list.add(test_error / TEST_LINES);
 			errors.add(new String(epochs + " " + train_error / TRAIN_LINES + " " + test_error / TEST_LINES));
 
 		}
 
 		Tools.writeFile("results.txt", errors);
-		Tools.runPython("error_plot.py", "results.txt");
+
+		if (PYPLOT)
+			Tools.runPython("error_plot.py", "results.txt");
 
 		if (GNUPLOT)
 			createGNUPlot(m);
@@ -123,11 +143,10 @@ public class Kohonen {
 		if (PYPLOT)
 			createClusterFile(m);
 
-		if (JAVA)
+		if (JAVA) {
 			createJavaPlot(m);
-
-		System.out.println("done");
-
+			createJavaError(m, train_error_list, test_error_list);
+		}
 	}
 
 	private static void createGNUPlot(Map m) {
@@ -161,4 +180,18 @@ public class Kohonen {
 		graph.repaint();
 
 	}
+
+	private static void createJavaError(Map m, ArrayList<Double> train_error, ArrayList<Double> test_error) {
+		SimpleGraph graph = new SimpleGraph(ITERATIONS * 1.2, test_error.get(0) * 1.2);
+		graph.setShowTicks(true);
+		graph.display();
+
+		for (int i = 0; i < train_error.size(); i++) {
+			FunctionalityExampleMain.errorPoint(graph, train_error.get(i), i, 0);
+			FunctionalityExampleMain.errorPoint(graph, test_error.get(i), i, 1);
+		}
+		graph.repaint();
+
+	}
+
 }

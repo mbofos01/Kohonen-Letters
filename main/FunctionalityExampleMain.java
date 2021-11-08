@@ -88,4 +88,12 @@ public class FunctionalityExampleMain {
 
 	}
 
+	public static void errorPoint(SimpleGraph graph, Double double1, int epoch, int flag) {
+		if (flag == 0)
+			graph.addPoint(epoch, double1, Color.PINK);
+		else
+			graph.addPoint(epoch, double1, Color.GREEN.darker());
+
+	}
+
 }

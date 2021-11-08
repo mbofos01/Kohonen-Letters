@@ -5,8 +5,8 @@ values_array_1 = []
 values_array_2 = []
 values_array_3 = []
 with open(sys.argv[1], "r") as reader:
-	lines = reader.readlines()
-	
+    lines = reader.readlines()
+    
 
 f=open(sys.argv[1],"r") 
 for line in f:
@@ -17,7 +17,7 @@ for line in f:
     values_array_3.append(float(b[2]))
 
 x_max = max(values_array_1)  + 0.2*max(values_array_1)
-y_max = max(values_array_2) + 0.2*max(values_array_2)
+y_max = max(values_array_3) + 0.2*max(values_array_3)
 
 fig = plt.figure()
 plt.Axes.set_frame_on
