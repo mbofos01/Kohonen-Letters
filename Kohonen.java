@@ -1,23 +1,45 @@
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import graph.SimpleGraph;
-import main.FunctionalityExampleMain;
 
 public class Kohonen {
 
-	public static boolean GNUPLOT = false;
-	public static boolean JAVA = true;
 	public static boolean PYPLOT = true;
 	static int DIMENSION;
 	static int ITERATIONS;
 	static int INPUTS;
+	static int TEST_LINES, TRAIN_LINES;
 	static double RATE;
 	static String dst_file;
 	static String src_file;
 	static String train_file;
 	static String test_file;
+	/*******************************************************/
+	static ArrayList<double[]> train_inputs = new ArrayList<>();
+	static ArrayList<Character> train_outputs = new ArrayList<>();
+	/*******************************************************/
+	static ArrayList<double[]> test_inputs = new ArrayList<>();
+	static ArrayList<Character> test_outputs = new ArrayList<>();
+
+	/*******************************************************/
+	private static void labelData(Map m) {
+		System.out.println("Labeling . . .");
+		for (Node[] ar : m.matrix)
+			for (Node n : ar) {
+				double min = Double.MAX_VALUE;
+				int place = -1;
+				for (int i = 0; i < TEST_LINES; i++) {
+					double dist = 0;
+					for (int a = 0; a < test_inputs.get(i).length; a++)
+						dist += Math.pow(test_inputs.get(i)[a] - n.weights[a], 2);
+
+					if (dist <= min) {
+						min = dist;
+						place = i;
+					}
+
+				}
+				n.setLabel(test_outputs.get(place));
+			}
+	}
 
 	/**
 	 * This function selects the parameters given by the input file.
@@ -33,28 +55,27 @@ public class Kohonen {
 		dst_file = new String(list.get(5));
 		train_file = new String(list.get(6));
 		test_file = new String(list.get(7));
-		GNUPLOT = Boolean.parseBoolean(list.get(8));
-		JAVA = Boolean.parseBoolean(list.get(9));
-		PYPLOT = Boolean.parseBoolean(list.get(10));
+		PYPLOT = Boolean.parseBoolean(list.get(8));
 
+		Tools.createTrainAndTestSets(src_file);
+		printArguments();
+		TRAIN_LINES = Tools.findLines(train_file);
+		for (int i = 0; i < TRAIN_LINES; i++)
+			train_inputs.add(new double[INPUTS]);
+		Tools.fillData(train_file, train_inputs, train_outputs, INPUTS);
+		/*******************************************************/
+		TEST_LINES = Tools.findLines(test_file);
+		for (int i = 0; i < TEST_LINES; i++)
+			test_inputs.add(new double[INPUTS]);
+		Tools.fillData(test_file, test_inputs, test_outputs, INPUTS);
+		/*******************************************************/
+		Tools.deleteFile("results.txt");
+		Tools.deleteFile("cluster.txt");
 	}
 
 	public static void printArguments() {
 		System.out.println("Kohonen Map: " + DIMENSION + "x" + DIMENSION);
 		System.out.println("Iterations: " + ITERATIONS);
-		System.out.println("Plot using: ");
-		if (JAVA)
-			System.out.print("Java Plot ");
-		if (JAVA && GNUPLOT)
-			System.out.print(" , ");
-		if (GNUPLOT)
-			System.out.print("GNU Plot");
-		if ((JAVA || GNUPLOT) && PYPLOT)
-			System.out.print(" , ");
-		if (PYPLOT)
-			System.out.print("Matplot Lib");
-
-		System.out.println();
 
 	}
 
@@ -62,12 +83,22 @@ public class Kohonen {
 		ArrayList<String> cluster = new ArrayList<>();
 		for (Node[] ar : m.matrix)
 			for (Node n : ar)
-				if (n.getLetter() != ' ')
-					cluster.add(new String(n.getLetter() + " " + n.getX() + " " + n.getY()));
+				cluster.add(new String(n.getLabel() + " " + n.getX() + " " + n.getY()));
 
-		// System.out.println("OUT " + cluster.size() + " " + dst_file + "|");
 		Tools.writeFile(dst_file, cluster);
 		Tools.runPython("map.py", dst_file);
+		String dump = "data_cluster.txt";
+		Tools.deleteFile(dump);
+		cluster = new ArrayList<>();
+		for (int i = m.matrix.length - 1; i >= 0; i--) {
+			int j;
+			for (j = 0; j < m.matrix[i].length; j++)
+				Tools.appendToFile(dump, new String(m.matrix[i][j].getLabel() + ""), false);
+
+			Tools.appendToFile(dump, new String(""), true);
+		}
+		// System.out.println("OUT " + cluster.size() + " " + dst_file + "|");
+
 	}
 
 	public static void main(String[] args) {
@@ -76,121 +107,40 @@ public class Kohonen {
 			filename = args[0];
 		ArrayList<String> list = Tools.getParameters(filename);
 		handleParameters(list);
-		printArguments();
-		Tools.createTrainAndTestSets(src_file);
-		/*******************************************************/
-		ArrayList<double[]> train_inputs = new ArrayList<>();
-		ArrayList<Character> train_outputs = new ArrayList<>();
-		/*******************************************************/
-		ArrayList<double[]> test_inputs = new ArrayList<>();
-		ArrayList<Character> test_outputs = new ArrayList<>();
-		/*******************************************************/
-		ArrayList<Double> train_error_list = new ArrayList<>();
-		ArrayList<Double> test_error_list = new ArrayList<>();
-		/*******************************************************/
-		int TRAIN_LINES = Tools.findLines(train_file);
-		for (int i = 0; i < TRAIN_LINES; i++)
-			train_inputs.add(new double[INPUTS]);
-		Tools.fillData(train_file, train_inputs, train_outputs, INPUTS);
-		/*******************************************************/
-		int TEST_LINES = Tools.findLines(test_file);
-		for (int i = 0; i < TEST_LINES; i++)
-			test_inputs.add(new double[INPUTS]);
-		Tools.fillData(test_file, test_inputs, test_outputs, INPUTS);
-		/*******************************************************/
+
 		Map m = new Map(DIMENSION, INPUTS, ITERATIONS, RATE);
-		ArrayList<String> errors = new ArrayList<>();
+
 		for (int epochs = 0; epochs < ITERATIONS; epochs++) {
 
 			System.out.println("Epoch: " + epochs);
 			/*******************************************************/
-			double train_error = 0;
 			for (int inLine = 0; inLine < TRAIN_LINES; inLine++) {
 				m.enterNewInput(train_inputs.get(inLine));
 				Node winner = m.findWinner();
-				winner.setLetter(train_outputs.get(inLine));
 				m.updateWeights(winner, train_outputs.get(inLine));
-
-				train_error += winner.errorCalcu(train_outputs.get(inLine));
-				// System.out.println(train_error);
+				m.addTrainError(winner.getDistance());
 
 			}
-			// System.out.println(train_error);
 			m.updateSigma(epochs);
 			m.updateRate(epochs);
-
-			double test_error = 0;
 			for (int inLine = 0; inLine < TEST_LINES; inLine++) {
 				m.enterNewInput(test_inputs.get(inLine));
 				Node winner = m.findWinner();
-				test_error += winner.errorCalcu(test_outputs.get(inLine));
+				m.addTestError(winner.getDistance());
 
 			}
-			train_error_list.add(train_error / TRAIN_LINES);
-			test_error_list.add(test_error / TEST_LINES);
-			errors.add(new String(epochs + " " + train_error / TRAIN_LINES + " " + test_error / TEST_LINES));
 
+			Tools.appendToFile("results.txt",
+					new String(epochs + " " + m.getTrainningError(TRAIN_LINES) + " " + m.getTestingError(TEST_LINES)),
+					true);
+			m.resetErrors();
 		}
+		labelData(m);
 
-		Tools.writeFile("results.txt", errors);
+		/// if (PYPLOT)
+		Tools.runPython("error_plot.py", "results.txt");
 
-		if (PYPLOT)
-			Tools.runPython("error_plot.py", "results.txt");
-
-		if (GNUPLOT)
-			createGNUPlot(m);
-
-		if (PYPLOT)
-			createClusterFile(m);
-
-		if (JAVA) {
-			createJavaPlot(m);
-			createJavaError(m, train_error_list, test_error_list);
-		}
-	}
-
-	private static void createGNUPlot(Map m) {
-		String[] files = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-				"S", "T", "U", "V", "W", "X", "Y", "Z" };
-		for (int i = 0; i < 26; i++) {
-			File myObj = new File(files[i]);
-			try {
-				myObj.delete();
-				myObj.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		for (Node[] ar : m.matrix)
-			for (Node n : ar)
-				if (n.getLetter() != ' ')
-					Tools.appendToFile(new String(n.getLetter() + ""), new String(n.getX() + " " + n.getY()));
-
-	}
-
-	private static void createJavaPlot(Map m) {
-		SimpleGraph graph = new SimpleGraph(DIMENSION * 1.2, DIMENSION * 1.2);
-		graph.display();
-
-		for (Node[] ar : m.matrix)
-			for (Node n : ar)
-				if (n.getLetter() != ' ')
-					FunctionalityExampleMain.plotPoint(graph, n.getLetter(), n.getX(), n.getY());
-		graph.repaint();
-
-	}
-
-	private static void createJavaError(Map m, ArrayList<Double> train_error, ArrayList<Double> test_error) {
-		SimpleGraph graph = new SimpleGraph(ITERATIONS * 1.2, test_error.get(0) * 1.2);
-		graph.setShowTicks(true);
-		graph.display();
-
-		for (int i = 0; i < train_error.size(); i++) {
-			FunctionalityExampleMain.errorPoint(graph, train_error.get(i), i, 0);
-			FunctionalityExampleMain.errorPoint(graph, test_error.get(i), i, 1);
-		}
-		graph.repaint();
+		createClusterFile(m);
 
 	}
 

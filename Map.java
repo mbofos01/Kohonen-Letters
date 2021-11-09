@@ -3,7 +3,8 @@ public class Map {
 	public Node[][] matrix;
 	public double[] inputs;
 	int T;
-	double J, sigma, n, n0, sigma0;
+	private double J, sigma, n, n0, sigma0;
+	private double train_error = 0, test_error = 0;
 
 	/**
 	 * Sigma -> Radius N -> Rate
@@ -30,15 +31,11 @@ public class Map {
 	}
 
 	public void updateRate(int currentIteration) {
-		double t = n;
 		n = n0 * Math.exp(-currentIteration / T);
-		n0 = t;
 	}
 
 	public void updateSigma(int currentIteration) {
-		double t = sigma;
 		sigma = sigma0 * Math.exp(-currentIteration / J);
-		sigma0 = t;
 	}
 
 	public void printDetails() {
@@ -49,15 +46,40 @@ public class Map {
 		for (Node[] s : matrix)
 			for (Node node : s) {
 				double h = neighborhoodFunction(winner, node);
-				// System.out.println(h);
 				for (int i = 0; i < inputs.length; i++)
 					node.weights[i] = node.weights[i] + this.n * h * (inputs[i] - node.weights[i]);
 
-				// System.out.println(this.n * h);
-				if (this.n * h < 0.01)
-					node.counters[letter - 'A'] += this.n * h;
-
 			}
+
+	}
+
+	public void addTrainError(double distance) {
+		addErrorRun(distance, "train");
+	}
+
+	public void addTestError(double distance) {
+		addErrorRun(distance, "test");
+	}
+
+	private void addErrorRun(double distance, String state) {
+		if (state.equals("train")) {
+			train_error += distance;
+		} else if (state.equals("test")) {
+			test_error += distance;
+		} else {
+			System.out.println("Wrong Inputs");
+			System.exit(0);
+		}
+
+	}
+
+	public double getTrainningError(int dataSetSize) {
+		return train_error * train_error / dataSetSize;
+
+	}
+
+	public double getTestingError(int dataSetSize) {
+		return test_error * test_error / dataSetSize;
 
 	}
 
@@ -81,7 +103,7 @@ public class Map {
 				for (int a = 0; a < inputs.length; a++) {
 					temp += Math.pow(inputs[a] - matrix[i][j].weights[a], 2);
 				}
-
+				matrix[i][j].setDistance(distance);
 				if (temp <= distance) {
 					min_placeX = i;
 					min_placeY = j;
@@ -89,6 +111,11 @@ public class Map {
 				}
 			}
 		return matrix[min_placeX][min_placeY];
+	}
+
+	public void resetErrors() {
+		test_error = 0;
+		train_error = 0;
 	}
 
 }

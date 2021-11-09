@@ -1,8 +1,8 @@
 public class Node {
 	private int x, y;
 	public double[] weights;
-	double[] counters = new double[26];
-	private char letter = ' ';
+	private char label;
+	private double distance;
 
 	public Node(int x, int y, int numberOfInputs) {
 		this.x = x;
@@ -10,74 +10,7 @@ public class Node {
 		weights = new double[numberOfInputs];
 		for (int i = 0; i < numberOfInputs; i++)
 			weights[i] = Tools.generateRandomWeights();
-		for (int i = 0; i < 26; i++)
-			counters[i] = 0;
 
-	}
-
-	/**
-	 * @return the letter
-	 */
-	public char getLetter() {
-		double a = 0;
-		char l = ' ';
-		for (int i = 0; i < 26; i++)
-			if (counters[i] > a) {
-				a = counters[i];
-				l = (char) ('A' + i);
-			}
-		return l;
-	}
-
-	/**
-	 * @param letter the letter to set
-	 */
-	public void setLetter(char letter) {
-		this.letter = letter;
-		counters[letter - 'A']++;
-
-	}
-
-	private char[] doubler(double copy[]) {
-		char[] letters = new char[26];
-		for (int i = 0; i < 26; i++) {
-			copy[i] = counters[i];
-			letters[i] = (char) ('A' + i);
-		}
-		return letters;
-	}
-
-	public static void insertionSort(double array[], char[] parallel) {
-		int size = array.length;
-		for (int step = 1; step < size; step++) {
-			double key = array[step];
-			char k = parallel[step];
-			int j = step - 1;
-			while (j >= 0 && key > array[j]) {
-				// For ascending order, change key> arr[j] to key< arr[j].
-				array[j + 1] = array[j];
-				parallel[j + 1] = parallel[j];
-				--j;
-			}
-			array[j + 1] = key;
-			parallel[j + 1] = k;
-		}
-	}
-
-	public double errorCalcu(char letter) {
-		double[] real = Tools.createExpectedOutputArray(letter);
-		if (getLetter() == ' ')
-			return 1;
-		double[] exp = Tools.createExpectedOutputArray(getLetter());
-		// return 0.5 * Math.pow(getLetter() - letter, 2);
-		return Tools.error(exp, real);
-
-	}
-
-	public static void main(String[] args) {
-		Node n = new Node(1, 1, 1);
-		n.setLetter('A');
-		System.out.println(n.errorCalcu('B'));
 	}
 
 	public int getX() {
@@ -104,10 +37,38 @@ public class Node {
 		this.weights = weights;
 	}
 
+	/**
+	 * @return the label
+	 */
+	public char getLabel() {
+		return label;
+	}
+
+	/**
+	 * @param label the label to set
+	 */
+	public void setLabel(char label) {
+		this.label = label;
+	}
+
+	/**
+	 * @return the distance
+	 */
+	public double getDistance() {
+		return distance;
+	}
+
+	/**
+	 * @param distance the distance to set
+	 */
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+
 	public void printNode() {
 		System.out.println("============================================================");
 		System.out.println("Place: ( " + x + " , " + y + " )");
-		System.out.println("Letter: " + letter);
+		System.out.println("Label: " + label);
 		System.out.println("\n============================================================");
 	}
 
