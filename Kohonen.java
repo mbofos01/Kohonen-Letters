@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Kohonen {
 
-	public static boolean PYPLOT = true;
+	public static boolean PYPLOT = true, LVQ = false;
 	static int DIMENSION;
 	static int ITERATIONS;
 	static int INPUTS;
@@ -56,6 +56,7 @@ public class Kohonen {
 		train_file = new String(list.get(6));
 		test_file = new String(list.get(7));
 		PYPLOT = Boolean.parseBoolean(list.get(8));
+		LVQ = Boolean.parseBoolean(list.get(9));
 
 		Tools.createTrainAndTestSets(src_file);
 		printArguments();
@@ -109,7 +110,7 @@ public class Kohonen {
 		handleParameters(list);
 
 		Map m = new Map(DIMENSION, INPUTS, ITERATIONS, RATE);
-
+		ArrayList<String> results = new ArrayList<>();
 		for (int epochs = 0; epochs < ITERATIONS; epochs++) {
 
 			System.out.println("Epoch: " + epochs);
@@ -130,11 +131,14 @@ public class Kohonen {
 
 			}
 
-			Tools.appendToFile("results.txt",
-					new String(epochs + " " + m.getTrainningError(TRAIN_LINES) + " " + m.getTestingError(TEST_LINES)),
-					true);
+			results.add(
+					new String(epochs + " " + m.getTrainningError(TRAIN_LINES) + " " + m.getTestingError(TEST_LINES)));
 			m.resetErrors();
 		}
+		Tools.writeFile("results.txt", results);
+		labelData(m);
+		if (LVQ)
+			m.LVQ(train_inputs, train_outputs);
 		labelData(m);
 
 		/// if (PYPLOT)

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Map {
 	public Node[][] matrix;
@@ -92,6 +93,20 @@ public class Map {
 	public void enterNewInput(double new_input[]) {
 		for (int i = 0; i < inputs.length; i++)
 			inputs[i] = new_input[i];
+	}
+
+	public void LVQ(ArrayList<double[]> train_inputs, ArrayList<Character> train_outputs) {
+		for (int i = 0; i < train_outputs.size(); i++) {
+			Node winner = this.findWinner();
+			if (winner.getLabel() == train_outputs.get(i))
+				for (int j = 0; j < winner.weights.length; j++)
+					winner.weights[j] = winner.weights[j] + n * (train_inputs.get(i)[j] - winner.weights[j]);
+			else
+				for (int j = 0; j < winner.weights.length; j++)
+					winner.weights[j] = winner.weights[j] - n * (train_inputs.get(i)[j] - winner.weights[j]);
+
+		}
+
 	}
 
 	public Node findWinner() {

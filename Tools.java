@@ -19,9 +19,7 @@ public class Tools {
 	public static double generateRandomWeights() {
 		int max = 1, min = 0;
 		double ran = 0.0;
-		do {
-			ran = Math.random() * (max - min) + min;
-		} while (ran == 0.0);
+		ran = Math.random() * (max - min) + min;
 
 		return ran;
 
