@@ -53,7 +53,9 @@ public class Map {
 				for (int i = 0; i < inputs.length; i++)
 					node.weights[i] = node.weights[i] + this.n * h * (inputs[i] - node.weights[i]);
 
-				// node.counters[letter - 'A'] += this.n * h;
+				// System.out.println(this.n * h);
+				if (this.n * h < 0.01)
+					node.counters[letter - 'A'] += this.n * h;
 
 			}
 
