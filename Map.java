@@ -15,7 +15,7 @@ public class Map {
 	public double[] inputs;
 	int T;
 	private double J, sigma, n, n0, sigma0;
-	private double train_error = 0, test_error = 0;
+	public double train_error = 0, test_error = 0;
 
 	/**
 	 * Simple map constructor, we need the dimensions of the map, the number of

@@ -154,7 +154,6 @@ public class Kohonen {
 				Node winner = m.findWinner();
 				m.updateWeights(winner);
 				m.addTrainError(winner.getDistance());
-
 			}
 			m.updateSigma(epochs);
 			m.updateRate(epochs);
@@ -170,6 +169,7 @@ public class Kohonen {
 					new String(epochs + " " + m.getTrainningError(TRAIN_LINES) + " " + m.getTestingError(TEST_LINES)));
 			m.resetErrors();
 		}
+
 		Tools.writeFile("results.txt", results);
 		labelData(m);
 		createClusterFile(m, true);
