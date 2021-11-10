@@ -7,6 +7,15 @@ import java.util.Collections;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+/**
+ * This class is used as a pocket knife in our project.
+ * 
+ * Here we have the implementation of every tools we need such as the Euclidean
+ * distance, weight generation or file IO handling
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class Tools {
 	static boolean python = true;
 
@@ -44,8 +53,6 @@ public class Tools {
 					list.add(data);
 					cnt = 0;
 				}
-
-				// System.out.println(data);
 
 			}
 			myReader.close();
@@ -98,16 +105,10 @@ public class Tools {
 				String line = myReader.nextLine();
 				StringTokenizer tok = new StringTokenizer(line);
 				String letter = tok.nextToken();
-				// System.out.println(letter);
 				outputs.add(letter.charAt(0));
-				// System.out.println(letter.charAt(0));
-				for (int i = 0; i < ARGS; i++) {
-					// System.out.println(Double.parseDouble(tok.nextToken()));
+				for (int i = 0; i < ARGS; i++)
 					inputs.get(cnt)[i] = Double.parseDouble(tok.nextToken());
-					// System.out.println(inputs.get(cnt)[i]);
-				}
 				cnt++;
-				// System.exit(0);
 
 			}
 			myReader.close();
@@ -158,6 +159,11 @@ public class Tools {
 		}
 	}
 
+	/**
+	 * This function deletes a file from the file system.
+	 * 
+	 * @param filename The name of the file we want to delete
+	 */
 	public static void deleteFile(String filename) {
 		File myObj = new File(filename);
 		myObj.delete();
@@ -260,13 +266,20 @@ public class Tools {
 		writeFile("test.txt", test);
 	}
 
+	/**
+	 * This function appends data to a file.
+	 * 
+	 * @param filename The file we want to append to
+	 * @param line     Data we want to append
+	 * @param new_line Boolean if true we add new line character
+	 */
+
 	public static void appendToFile(String filename, String line, boolean new_line) {
 
 		FileWriter fos = null;
 		try {
 			fos = new FileWriter(filename, true);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
@@ -275,55 +288,27 @@ public class Tools {
 			else
 				fos.write(new String(line));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			fos.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
 
+	/**
+	 * This function calculates the euclidean distance between two nodes.
+	 * 
+	 * @param winner      Node number 1
+	 * @param random_node Node number 2
+	 * @return distance between node 1 and node 2
+	 */
 	public static double Euclidean(Node winner, Node random_node) {
 		double x_d = winner.getX() - random_node.getX();
 		double y_d = winner.getY() - random_node.getY();
 		return Math.pow(x_d, 2) + Math.pow(y_d, 2);
-	}
-
-	/**
-	 * This function calculates the error of an output.
-	 * 
-	 * (0.5*Ó(target - real)^2)
-	 * 
-	 * @param tpj ArrayList(Double) target outputs
-	 * @param opj ArrayList(Double) real outputs
-	 * @return double value - error
-	 */
-	public static double error(double[] tpj, double[] opj) {
-		double sum = 0;
-		for (int i = 0; i < tpj.length; i++)
-			sum += (tpj[i] - opj[i]) * (tpj[i] - opj[i]);
-
-		return 0.5 * sum;
-
-	}
-
-	/**
-	 * This function creates an array than represents the output we expect from a
-	 * neural network in order to categorize letters.
-	 * 
-	 * @param letter The character we want to recognize
-	 * @return Double array (binary logic)
-	 */
-	public static double[] createExpectedOutputArray(char letter) {
-		double[] dump = new double[26];
-		for (int i = 0; i < 26; i++)
-			dump[i] = 0;
-		dump[(int) (letter - 'A')] = 1;
-		return dump;
 	}
 
 }

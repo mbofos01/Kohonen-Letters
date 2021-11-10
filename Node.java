@@ -1,9 +1,29 @@
+/**
+ * This object represents the nodes used in our SOM.
+ * 
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class Node {
+	/**
+	 * Each node contains a (x,y) set, an array of weights depending on the number
+	 * of inputs, a label (for the class we want to assign) and a distance value
+	 * from the input.
+	 */
 	private int x, y;
 	public double[] weights;
 	private char label;
 	private double distance;
 
+	/**
+	 * Simple node constructor, we want the x,y point and the number of inputs we
+	 * are going to use.
+	 * 
+	 * @param x              X coordinate
+	 * @param y              Y coordinate
+	 * @param numberOfInputs We have to look our dataset
+	 */
 	public Node(int x, int y, int numberOfInputs) {
 		this.x = x;
 		this.y = y;
@@ -13,38 +33,54 @@ public class Node {
 
 	}
 
+	/**
+	 * This method returns the X coordinate.
+	 * 
+	 * @return X coordinate
+	 */
 	public int getX() {
 		return x;
 	}
 
+	/**
+	 * This method changes the X coordinate.
+	 * 
+	 * @param x new X coordinate
+	 */
 	public void setX(int x) {
 		this.x = x;
 	}
 
+	/**
+	 * This method returns the Y coordinate.
+	 * 
+	 * @return Y coordinate
+	 */
 	public int getY() {
 		return y;
 	}
 
+	/**
+	 * This method changes the Y coordinate.
+	 * 
+	 * @param x new Y coordinate
+	 */
 	public void setY(int y) {
 		this.y = y;
 	}
 
-	public double[] getWeights() {
-		return weights;
-	}
-
-	public void setWeights(double[] weights) {
-		this.weights = weights;
-	}
-
 	/**
-	 * @return the label
+	 * This method fetches the label of the node.
+	 * 
+	 * @return the node's label
 	 */
 	public char getLabel() {
 		return label;
 	}
 
 	/**
+	 * This method changes the node's label
+	 * 
 	 * @param label the label to set
 	 */
 	public void setLabel(char label) {
@@ -52,26 +88,26 @@ public class Node {
 	}
 
 	/**
-	 * @return the distance
+	 * This method fetches the calculated distance from the input vector.
+	 * 
+	 * @return the distance from the input vector
 	 */
 	public double getDistance() {
 		return distance;
 	}
 
 	/**
+	 * This method sets the calculated distance from the input vector
+	 * 
 	 * @param distance the distance to set
 	 */
 	public void setDistance(double distance) {
 		this.distance = distance;
 	}
 
-	public void printNode() {
-		System.out.println("============================================================");
-		System.out.println("Place: ( " + x + " , " + y + " )");
-		System.out.println("Label: " + label);
-		System.out.println("\n============================================================");
-	}
-
+	/**
+	 * Typical equals method based on the XY coordinates.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

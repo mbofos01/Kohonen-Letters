@@ -1,22 +1,33 @@
 import java.util.ArrayList;
 
+/**
+ * This class is the driver class of our project.
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class Kohonen {
+	private static boolean PYPLOT = true, LVQ = false;
+	private static int DIMENSION;
+	private static int ITERATIONS;
+	private static int INPUTS;
+	private static int TEST_LINES, TRAIN_LINES;
+	private static double RATE;
+	private static String dst_file;
+	private static String src_file;
+	private static String train_file;
+	private static String test_file;
+	private static ArrayList<double[]> train_inputs = new ArrayList<>();
+	private static ArrayList<Character> train_outputs = new ArrayList<>();
+	private static ArrayList<double[]> test_inputs = new ArrayList<>();
+	private static ArrayList<Character> test_outputs = new ArrayList<>();
 
-	public static boolean PYPLOT = true, LVQ = false;
-	static int DIMENSION;
-	static int ITERATIONS;
-	static int INPUTS;
-	static int TEST_LINES, TRAIN_LINES;
-	static double RATE;
-	static String dst_file;
-	static String src_file;
-	static String train_file;
-	static String test_file;
-	static ArrayList<double[]> train_inputs = new ArrayList<>();
-	static ArrayList<Character> train_outputs = new ArrayList<>();
-	static ArrayList<double[]> test_inputs = new ArrayList<>();
-	static ArrayList<Character> test_outputs = new ArrayList<>();
-
+	/**
+	 * This function labels each node based on the minimum distance of the testing
+	 * set.
+	 * 
+	 * @param m The SOM we use
+	 */
 	private static void labelData(Map m) {
 		System.out.println("Labeling . . .");
 		for (Node[] ar : m.matrix)
@@ -71,12 +82,22 @@ public class Kohonen {
 		Tools.deleteFile("cluster.txt");
 	}
 
+	/**
+	 * This function prints some of the arguments given.
+	 */
 	public static void printArguments() {
 		System.out.println("Kohonen Map: " + DIMENSION + "x" + DIMENSION);
 		System.out.println("Iterations: " + ITERATIONS);
 
 	}
 
+	/**
+	 * This function creates the cluster visualization using pyplot if selected and
+	 * a txt file with the clusters by default.
+	 * 
+	 * @param m The SOM we use
+	 * @param b True if we create the LVQ cluster too
+	 */
 	public static void createClusterFile(Map m, boolean b) {
 		ArrayList<String> cluster = new ArrayList<>();
 		for (Node[] ar : m.matrix)
@@ -86,13 +107,15 @@ public class Kohonen {
 		String dump = new String();
 		if (b) {
 			Tools.writeFile(dst_file, cluster);
-			Tools.runPython("CreateCluster.py", dst_file, true);
+			if (PYPLOT)
+				Tools.runPython("CreateCluster.py", dst_file, true);
 			dump = "data_cluster.txt";
 		} else {
 			String lvq = "LVQ_";
 			String newS = lvq.concat(dst_file);
 			Tools.writeFile(newS, cluster);
-			Tools.runPython("CreateCluster.py", newS, false);
+			if (PYPLOT)
+				Tools.runPython("CreateCluster.py", newS, false);
 			dump = "LVQ_data_cluster.txt";
 		}
 		Tools.deleteFile(dump);
@@ -107,6 +130,11 @@ public class Kohonen {
 
 	}
 
+	/**
+	 * Main function of your project.
+	 * 
+	 * @param args The parameters file we use
+	 */
 	public static void main(String[] args) {
 		String filename = "parameters.txt";
 		if (args.length >= 1)
@@ -115,6 +143,7 @@ public class Kohonen {
 		handleParameters(list);
 
 		Map m = new Map(DIMENSION, INPUTS, ITERATIONS, RATE);
+		m.printDetails();
 		ArrayList<String> results = new ArrayList<>();
 		for (int epochs = 0; epochs < ITERATIONS; epochs++) {
 
@@ -123,7 +152,7 @@ public class Kohonen {
 			for (int inLine = 0; inLine < TRAIN_LINES; inLine++) {
 				m.enterNewInput(train_inputs.get(inLine));
 				Node winner = m.findWinner();
-				m.updateWeights(winner, train_outputs.get(inLine));
+				m.updateWeights(winner);
 				m.addTrainError(winner.getDistance());
 
 			}
@@ -135,7 +164,8 @@ public class Kohonen {
 				m.addTestError(winner.getDistance());
 
 			}
-
+			System.out.println(
+					new String(epochs + " " + m.getTrainningError(TRAIN_LINES) + " " + m.getTestingError(TEST_LINES)));
 			results.add(
 					new String(epochs + " " + m.getTrainningError(TRAIN_LINES) + " " + m.getTestingError(TEST_LINES)));
 			m.resetErrors();
@@ -150,7 +180,8 @@ public class Kohonen {
 			labelData(m);
 			createClusterFile(m, false);
 		}
-		Tools.runPython("CreateErrorPlot.py", "results.txt", false);
+		if (PYPLOT)
+			Tools.runPython("CreateErrorPlot.py", "results.txt", false);
 		System.out.println("Process Ended");
 	}
 
