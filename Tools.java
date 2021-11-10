@@ -26,12 +26,7 @@ public class Tools {
 	 * @return double (0,1]
 	 */
 	public static double generateRandomWeights() {
-		int max = 1, min = 0;
-		double ran = 0.0;
-		ran = Math.random() * (max - min) + min;
-
-		return ran;
-
+		return Math.random();
 	}
 
 	/**

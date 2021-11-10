@@ -146,14 +146,13 @@ public class Kohonen {
 		m.printDetails();
 		ArrayList<String> results = new ArrayList<>();
 		for (int epochs = 0; epochs < ITERATIONS; epochs++) {
-
 			System.out.println("Epoch: " + (epochs + 1));
 			/*******************************************************/
 			for (int inLine = 0; inLine < TRAIN_LINES; inLine++) {
 				m.enterNewInput(train_inputs.get(inLine));
 				Node winner = m.findWinner();
-				m.updateWeights(winner);
 				m.addTrainError(winner.getDistance());
+				m.updateWeights(winner);
 			}
 			m.updateSigma(epochs);
 			m.updateRate(epochs);
@@ -163,8 +162,6 @@ public class Kohonen {
 				m.addTestError(winner.getDistance());
 
 			}
-			System.out.println(
-					new String(epochs + " " + m.getTrainningError(TRAIN_LINES) + " " + m.getTestingError(TEST_LINES)));
 			results.add(
 					new String(epochs + " " + m.getTrainningError(TRAIN_LINES) + " " + m.getTestingError(TEST_LINES)));
 			m.resetErrors();

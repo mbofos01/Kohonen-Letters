@@ -140,7 +140,7 @@ public class Map {
 	 * @return Training error
 	 */
 	public double getTrainningError(int dataSetSize) {
-		return train_error * train_error / dataSetSize;
+		return Math.pow( train_error , 2 ) / dataSetSize;
 
 	}
 
@@ -151,7 +151,7 @@ public class Map {
 	 * @return Testing error
 	 */
 	public double getTestingError(int dataSetSize) {
-		return test_error * test_error / dataSetSize;
+		return Math.pow( test_error , 2 ) / dataSetSize;
 
 	}
 
@@ -200,13 +200,14 @@ public class Map {
 				for (int a = 0; a < inputs.length; a++) {
 					temp += Math.pow(inputs[a] - matrix[i][j].weights[a], 2);
 				}
-				matrix[i][j].setDistance(distance);
+				
 				if (temp <= distance) {
 					min_placeX = i;
 					min_placeY = j;
 					distance = temp;
 				}
 			}
+		matrix[min_placeX][min_placeY].setDistance(distance);
 		return matrix[min_placeX][min_placeY];
 	}
 

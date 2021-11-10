@@ -1,6 +1,6 @@
 dimension 100
-iterations 200
-learningRate 0.9
+iterations 100
+learningRate 0.5
 numberOfInputs 16
 source_file normalized.txt
 destinationFile cluster.txt
