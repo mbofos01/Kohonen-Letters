@@ -12,14 +12,11 @@ public class Kohonen {
 	static String src_file;
 	static String train_file;
 	static String test_file;
-	/*******************************************************/
 	static ArrayList<double[]> train_inputs = new ArrayList<>();
 	static ArrayList<Character> train_outputs = new ArrayList<>();
-	/*******************************************************/
 	static ArrayList<double[]> test_inputs = new ArrayList<>();
 	static ArrayList<Character> test_outputs = new ArrayList<>();
 
-	/*******************************************************/
 	private static void labelData(Map m) {
 		System.out.println("Labeling . . .");
 		for (Node[] ar : m.matrix)
@@ -80,25 +77,33 @@ public class Kohonen {
 
 	}
 
-	public static void createClusterFile(Map m) {
+	public static void createClusterFile(Map m, boolean b) {
 		ArrayList<String> cluster = new ArrayList<>();
 		for (Node[] ar : m.matrix)
 			for (Node n : ar)
 				cluster.add(new String(n.getLabel() + " " + n.getX() + " " + n.getY()));
 
-		Tools.writeFile(dst_file, cluster);
-		Tools.runPython("map.py", dst_file);
-		String dump = "data_cluster.txt";
+		String dump = new String();
+		if (b) {
+			Tools.writeFile(dst_file, cluster);
+			Tools.runPython("CreateCluster.py", dst_file, true);
+			dump = "data_cluster.txt";
+		} else {
+			String lvq = "LVQ_";
+			String newS = lvq.concat(dst_file);
+			Tools.writeFile(newS, cluster);
+			Tools.runPython("CreateCluster.py", newS, false);
+			dump = "LVQ_data_cluster.txt";
+		}
 		Tools.deleteFile(dump);
 		cluster = new ArrayList<>();
-		for (int i = m.matrix.length - 1; i >= 0; i--) {
-			int j;
-			for (j = 0; j < m.matrix[i].length; j++)
+
+		for (int j = m.matrix[0].length - 1; j >= 0; j--) {
+			for (int i = 0; i < m.matrix.length; i++)
 				Tools.appendToFile(dump, new String(m.matrix[i][j].getLabel() + ""), false);
 
 			Tools.appendToFile(dump, new String(""), true);
 		}
-		// System.out.println("OUT " + cluster.size() + " " + dst_file + "|");
 
 	}
 
@@ -113,7 +118,7 @@ public class Kohonen {
 		ArrayList<String> results = new ArrayList<>();
 		for (int epochs = 0; epochs < ITERATIONS; epochs++) {
 
-			System.out.println("Epoch: " + epochs);
+			System.out.println("Epoch: " + (epochs + 1));
 			/*******************************************************/
 			for (int inLine = 0; inLine < TRAIN_LINES; inLine++) {
 				m.enterNewInput(train_inputs.get(inLine));
@@ -137,15 +142,16 @@ public class Kohonen {
 		}
 		Tools.writeFile("results.txt", results);
 		labelData(m);
-		if (LVQ)
+		createClusterFile(m, true);
+
+		if (LVQ) {
+			System.out.println("LVQ enabled:");
 			m.LVQ(train_inputs, train_outputs);
-		labelData(m);
-
-		/// if (PYPLOT)
-		Tools.runPython("error_plot.py", "results.txt");
-
-		createClusterFile(m);
-
+			labelData(m);
+			createClusterFile(m, false);
+		}
+		Tools.runPython("error_plot.py", "results.txt", false);
+		System.out.println("Process Ended");
 	}
 
 }

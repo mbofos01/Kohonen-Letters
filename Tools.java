@@ -172,9 +172,14 @@ public class Tools {
 	 * 
 	 * @param filename new name of the source data file
 	 */
-	public static void runPython(String script, String filename) {
+	public static void runPython(String script, String filename, boolean lvq) {
+		int offset = -1;
+		if (lvq)
+			offset = 1;
+		else
+			offset = 0;
 		if (python) {
-			String command = "python3 " + script + " " + filename + " ";
+			String command = "python3 " + script + " " + filename + " " + offset;
 			try {
 				Runtime.getRuntime().exec(command);
 			} catch (IOException e) {
