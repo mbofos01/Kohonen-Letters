@@ -1,7 +1,7 @@
 Project: Letter recognition with SOM-Kohonen
 Author: Michail-Panagiotis Bofos AO082689
 
-Note: runKohonen.sh script installs the matplot lib
+Note: runKohonen.sh script installs the matplot lib.
 
 Instructions:
         Manually: 
