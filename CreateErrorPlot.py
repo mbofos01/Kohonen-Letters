@@ -16,8 +16,12 @@ for line in f:
     values_array_2.append(float(b[1]))
     values_array_3.append(float(b[2]))
 
+maxAll = []
+maxAll.append(max(values_array_3))
+maxAll.append(max(values_array_2))
+
 x_max = max(values_array_1)  + 0.2*max(values_array_1)
-y_max = max(values_array_3) + 0.2*max(values_array_3)
+y_max = max(maxAll) + 0.2*max(maxAll)
 
 fig = plt.figure()
 plt.Axes.set_frame_on

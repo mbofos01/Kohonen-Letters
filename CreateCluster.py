@@ -4,6 +4,11 @@ import sys
 x =  [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
 y = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
 letters = []
+title = ""
+if( sys.argv[2] == "1" ):
+	title = "Letter Cluster"
+else:
+	title = "LVQ Letter Cluster"
 
 markers = ["$A$","$B$","$C$","$D$","$E$","$F$","$G$","$H$","$I$","$J$","$K$","$L$",
 "$M$","$N$","$O$","$P$","$Q$","$R$","$S$","$T$","$U$","$V$","$W$","$X$","$Y$","$Z$"]
@@ -35,7 +40,7 @@ y_max = max(maxesY) + 0.2*max(maxesY)
 fig = plt.figure()
 
 plt.Axes.set_frame_on
-plt.title("Letter Cluster")
+plt.title(title)
 for i in range(26):
     enumerate(markers)
     plt.plot(x[i],y[i], marker=markers[i],lw=0)
@@ -46,6 +51,4 @@ plt.grid(True)
 plt.xlim([- 0.2*x_max, x_max])
 plt.ylim([- 0.2*y_max, y_max])
 plt.savefig('Cluster.png')
-#plt.legend(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
-# "R", "S", "T", "U", "V", "W", "X", "Y", "Z"], loc='best')
 plt.show()

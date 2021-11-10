@@ -150,7 +150,7 @@ public class Kohonen {
 			labelData(m);
 			createClusterFile(m, false);
 		}
-		Tools.runPython("error_plot.py", "results.txt", false);
+		Tools.runPython("CreateErrorPlot.py", "results.txt", false);
 		System.out.println("Process Ended");
 	}
 
