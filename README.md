@@ -4,6 +4,7 @@ Author: Michail-Panagiotis Bofos AO082689
 Note: runKohonen.sh script installs the matplot lib.
 
 Instructions:
+
         Manually: 
                 1) javac *.java
                 2) java Kohonen parameters.txt
