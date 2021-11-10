@@ -5,11 +5,17 @@ x =  [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []
 y = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
 letters = []
 title = ""
+img = ""
 if( sys.argv[2] == "1" ):
 	title = "Letter Cluster"
 else:
 	title = "LVQ Letter Cluster"
 
+
+if( sys.argv[2] == "1" ):
+    img = "Cluster.png"
+else:
+    img = "LVQ_Cluster.png"
 markers = ["$A$","$B$","$C$","$D$","$E$","$F$","$G$","$H$","$I$","$J$","$K$","$L$",
 "$M$","$N$","$O$","$P$","$Q$","$R$","$S$","$T$","$U$","$V$","$W$","$X$","$Y$","$Z$"]
 
@@ -50,5 +56,5 @@ for i in range(26):
 plt.grid(True)
 plt.xlim([- 0.2*x_max, x_max])
 plt.ylim([- 0.2*y_max, y_max])
-plt.savefig('Cluster.png')
+plt.savefig(img)
 plt.show()
