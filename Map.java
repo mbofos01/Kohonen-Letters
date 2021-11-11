@@ -123,9 +123,9 @@ public class Map {
 	 */
 	private void addErrorRun(double distance, String state) {
 		if (state.equals("train")) {
-			train_error += distance;
+			train_error += distance*distance;
 		} else if (state.equals("test")) {
-			test_error += distance;
+			test_error += distance*distance;
 		} else {
 			System.out.println("Wrong Inputs");
 			System.exit(0);
@@ -140,7 +140,7 @@ public class Map {
 	 * @return Training error
 	 */
 	public double getTrainningError(int dataSetSize) {
-		return Math.pow( train_error , 2 ) / dataSetSize;
+		return train_error  / dataSetSize;
 
 	}
 
@@ -151,7 +151,7 @@ public class Map {
 	 * @return Testing error
 	 */
 	public double getTestingError(int dataSetSize) {
-		return Math.pow( test_error , 2 ) / dataSetSize;
+		return  test_error / dataSetSize;
 
 	}
 
