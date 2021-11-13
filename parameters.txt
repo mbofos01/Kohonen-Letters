@@ -8,4 +8,3 @@ trainFile train.txt
 testFile test.txt
 pyplot true
 LVQ true
-as
