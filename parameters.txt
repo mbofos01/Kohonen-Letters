@@ -3,8 +3,8 @@ iterations 100
 learningRate 0.9
 numberOfInputs 16
 source_file normalized.txt
-destinationFile cluster.txt
+destinationFile clustering.txt
 trainFile train.txt
 testFile test.txt
 pyplot true
-LVQ false
+LVQ true
