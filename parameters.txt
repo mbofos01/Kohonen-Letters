@@ -1,4 +1,4 @@
-dimension 150
+dimension 500
 iterations 100
 learningRate 0.9
 numberOfInputs 16
@@ -8,3 +8,4 @@ trainFile train.txt
 testFile test.txt
 pyplot true
 LVQ true
+as
