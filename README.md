@@ -11,4 +11,4 @@ Instructions:
 
         Automated:
                 1) Windows: ./runKohonen.bat
-                2) Unix/Linux: ./runKohonen.sh
+                2) Unix/Linux: ./runKohonen.sh (parameters.txt)
